@@ -6,6 +6,7 @@ from staldates.ui.widgets.Preferences import PreferencesWidget
 from staldates.ui.widgets.Screens import ScreenWithBackButton
 from staldates.ui._version import __version__ as _ui_version
 from staldates.VisualsSystem import with_atem
+from staldates.preferences import Preferences
 
 
 class AdvancedMenu(ScreenWithBackButton):
@@ -33,6 +34,8 @@ class AdvancedMenu(ScreenWithBackButton):
         lblVersion = QLabel()
         lblVersion.setText("av-control version {0}\navx version {1}".format(_ui_version, _avx_version))
         bottom_row.addWidget(lblVersion)
+
+        self.lv = LogViewer(self.controller, self.mainWindow)
 
         log = ExpandingButton()
         log.setText("Log")
