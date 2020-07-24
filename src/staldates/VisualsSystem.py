@@ -50,7 +50,7 @@ class Input(QObject):
     def set_tally(self, tally):
         for me, sources in tally.iteritems():
             self.tally.setdefault(me, {})['pgm'] = self.source in sources['pgm']
-            self.tally.setdefault(me, {})['pvw'] = self.source in sources['pvw']
+            self.tally.setdefault(me, {})['pvw'] = self.source in sources['prv']
         self.changedState.emit()
 
 
