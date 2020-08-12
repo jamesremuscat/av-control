@@ -1,4 +1,4 @@
-from avx.devices.net.atem import VideoSource, MessageTypes as ATEMMessageTypes
+from avx.devices.net.atem import VideoSource, MessageTypes as ATEMMessageTypes, SuperSourceArtType
 from avx.devices.net.atem.utils import NotInitializedException
 from avx.devices.net.hyperdeck import TransportState, MessageTypes as HyperDeckMessageTypes
 from PySide.QtCore import QObject, Signal, QTimer
@@ -106,6 +106,49 @@ def _default_outputs():
     }
 
 
+class SuperSourceInput(QObject):
+    changedState = Signal()
+
+    def __init__(self, label, enabled=False):
+        super(SuperSourceInput, self).__init__()
+        self.label = label
+        self.source = None
+        self.enabled = enabled
+
+    def set_source(self, source):
+        if source != self.source:
+            self.source = source
+            self.changedState.emit()
+
+    def set_enabled(self, enabled):
+        if enabled != self.enabled:
+            self.enabled = enabled
+            self.changedState.emit()
+
+
+class SuperSource(object):
+    def __init__(self):
+        self.boxes = {}
+        for i in range(4):
+            self.boxes[i] = SuperSourceInput("Box {}".format(i + 1))
+        self.fill = SuperSourceInput('Background', True)
+        self.key = SuperSourceInput('Key')
+
+    def update(self, data):
+        if 'fill' in data:
+            self.fill.set_source(data['fill'])
+
+        if 'key' in data:
+            self.key.set_source(data['key'])
+        self.key.set_enabled(
+            data.get('artType', SuperSourceArtType.BACKGROUND) == SuperSourceArtType.FOREGROUND
+        )
+
+        for idx, box in enumerate(data.get('boxes', [])):
+            self.boxes[i].set_enabled(box.get('enabled', False))
+            self.boxes[i].set_source(box.get('source'))
+
+
 class USK(QObject):
     changedState = Signal()
 
@@ -207,6 +250,7 @@ class SwitcherState(QObject):
         self.dsks = {0: DSK(1), 1: DSK(2)}
         self.ftb = FadeToBlack()
         self.mixTransition = MixTransition()
+        self.super_source = SuperSource()
         self.connected = False
 
         self._initFromAtem()
@@ -223,6 +267,7 @@ class SwitcherState(QObject):
                 self.updateFTBState(self.atem.getFadeToBlackState(me=self.me))
                 self.updateFTBRate(self.atem.getFadeToBlackProperties(me=self.me)['rate'])
                 self.updateMixTransitionProps(self.atem.getMixTransitionProps(me=self.me))
+                self.updateSuperSource(self.atem.getSuperSourceState())
             except NotInitializedException:
                 pass
 
@@ -282,6 +327,9 @@ class SwitcherState(QObject):
     def updateMixTransitionProps(self, props):
         if 'rate' in props:
             self.mixTransition.set_rate(props['rate'])
+
+    def updateSuperSource(self, data):
+        self.super_source.update(data)
 
     def updateFullTally(self, tally):
         for ip in self.inputs.itervalues():

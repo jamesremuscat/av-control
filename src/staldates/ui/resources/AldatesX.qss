@@ -7,7 +7,7 @@ MainWindow, QDialog {
   background-color: #003E5F;
 }
 
-OutputsGrid {
+OutputsGrid, SuperSourceInputsGrid {
   background-color: #00527E;
 }
 
@@ -19,6 +19,10 @@ MainMixControl {
 MainMixControl > QLabel {
   text-align: center;
   font-size: 12pt;
+}
+
+QToolButton {
+  background-color: transparent;
 }
 
 InputButton, OutputButton, OptionButton, ExpandingButton, QComboBox, QListView, CameraControl QPushButton {

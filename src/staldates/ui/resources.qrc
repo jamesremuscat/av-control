@@ -8,6 +8,7 @@
         <file alias="computer">resources/icons/computer.svg</file>
         <file alias="drive-optical">resources/icons/drive-optical.svg</file>
         <file alias="go-down">resources/icons/go-down.svg</file>
+        <file alias="go-jump">resources/icons/go-jump.svg</file>
         <file alias="go-next">resources/icons/go-next.svg</file>
         <file alias="go-previous">resources/icons/go-previous.svg</file>
         <file alias="go-up">resources/icons/go-up.svg</file>

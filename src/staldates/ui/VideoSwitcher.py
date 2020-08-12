@@ -1,14 +1,16 @@
 from avx.devices.net.atem.constants import VideoSource, TransitionStyle
+from PySide.QtCore import QSize, Qt
 from PySide.QtGui import QWidget, QGridLayout, QHBoxLayout, QButtonGroup, QLabel,\
-    QMenu
+    QMenu, QStackedLayout, QToolButton, QIcon
 from staldates.ui.widgets.Buttons import InputButton, FlashingInputButton
 from staldates.ui.widgets.OutputsGrid import OutputsGrid
 from staldates.ui.CameraControls import CameraControl, AdvancedCameraControl
 from staldates.ui.StringConstants import StringConstants
 from staldates.ui.widgets.AllInputsPanel import AllInputsPanel
 from staldates.ui.widgets.OverlayControl import OverlayControl
-from staldates.VisualsSystem import with_atem, Camera
+from staldates.ui.widgets.SuperSourceInputsGrid import SuperSourceInputsGrid
 from staldates.ui.widgets.FadeToBlackControl import FadeToBlackControl
+from staldates.VisualsSystem import with_atem, Camera
 
 
 class VideoSwitcher(QWidget):
@@ -130,10 +132,37 @@ class VideoSwitcher(QWidget):
 
         self.og.setAuxesEnabled(False)  # since we start off without an input selected
 
-        layout.addWidget(self.og, 1, 5, 1, 2)
+        self.ssg = SuperSourceInputsGrid(self.switcherState.super_source)
+
+        def setSuperSourceBox(idx):
+            if self.inputs.checkedButton().input:
+                self.atem.setSuperSourceBoxSource(self.inputs.checkedButton().input.source)
+        self.ssg.setBox.connect(setSuperSourceBox)
+
+        def setSuperSourceFill():
+            if self.inputs.checkedButton().input:
+                self.atem.setSuperSourceFill(self.inputs.checkedButton().input.source)
+
+        outputs_panel = QStackedLayout()
+        outputs_panel.addWidget(self.og)
+        outputs_panel.addWidget(self.ssg)
+
+        layout.addLayout(outputs_panel, 1, 5, 1, 2)
+
+        def toggle_outputs_panel():
+            outputs_panel.setCurrentIndex(
+                (outputs_panel.currentIndex() + 1) % 2
+            )
+        btnToggle = QToolButton()
+        btnToggle.setIcon(QIcon(':icons/go-jump'))
+        btnToggle.clicked.connect(toggle_outputs_panel)
+        btnToggle.setIconSize(QSize(24, 24))
+        btnToggle.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        layout.addWidget(btnToggle, 2, 6)
+        layout.setAlignment(btnToggle, Qt.AlignRight)
 
         self.blankWidget = QWidget()
-        layout.addWidget(self.blankWidget, 1, 0, 1, 5)
+        layout.addWidget(self.blankWidget, 1, 0, 2, 5)
 
         layout.setRowStretch(0, 1)
         layout.setRowStretch(1, 5)
@@ -207,11 +236,11 @@ class VideoSwitcher(QWidget):
             layout.removeWidget(widget)
             if panel:
                 # display panel
-                layout.addWidget(panel, 1, 0, 1, 5)
+                layout.addWidget(panel, 1, 0, 2, 5)
                 panel.show()
             else:
                 # hide panel
-                layout.addWidget(self.blankWidget, 1, 0, 1, 5)
+                layout.addWidget(self.blankWidget, 1, 0, 2, 5)
                 self.blankWidget.show()
 
     def displayAdvPanel(self):
