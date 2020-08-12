@@ -361,6 +361,8 @@ class SwitcherState(QObject):
         elif msgType == ATEMMessageTypes.TRANSITION_MIX_PROPERTIES_CHANGED:
             if self.me_index in data:
                 self.updateMixTransitionProps(data[self.me_index])
+        elif msgType == ATEMMessageTypes.SUPER_SOURCE_CHANGED:
+            self.super_source.update(data)
         elif msgType == ATEMMessageTypes.ATEM_CONNECTED:
             self._initFromAtem()
         elif msgType == ATEMMessageTypes.ATEM_DISCONNECTED:
