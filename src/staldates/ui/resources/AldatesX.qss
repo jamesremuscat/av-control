@@ -58,6 +58,19 @@ OutputButton>#stateDisplay[highlight="true"] {
   color: black;
 }
 
+SuperSourceButton>#stateDisplay[highlight="true"], SuperSourceButton>#textDisplay {
+  color: white;
+  background-color: transparent;
+}
+
+SuperSourceButton.mainMix > #stateDisplay[highlight="true"], SuperSourceButton.mainMix > #textDisplay {
+  color: black;
+}
+
+SuperSourceButton.mainMix:pressed {
+  background-color: #1693A5;
+}
+
 InputButton {
   border: 3px solid #1693A5;
 }

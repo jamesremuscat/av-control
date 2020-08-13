@@ -191,7 +191,7 @@ class OutputButton(LongPressButtonMixin, ExpandingButton):
         self.textDisplay.setObjectName("textDisplay")
 
         self.stateDisplay.setObjectName("stateDisplay")
-        self.stateDisplay.setAlignment(Qt.AlignHCenter)
+        self.stateDisplay.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
 
         self.setLayout(layout)
 
