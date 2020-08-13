@@ -134,19 +134,19 @@ class SuperSource(object):
         self.fill = SuperSourceInput('Background', True)
         self.key = SuperSourceInput('Key')
 
-    def update(self, data):
+    def update(self, data, inputs):
         if 'fill' in data:
-            self.fill.set_source(data['fill'])
+            self.fill.set_source(inputs.get(data['fill']))
 
         if 'key' in data:
-            self.key.set_source(data['key'])
+            self.key.set_source(inputs.get(data['key']))
         self.key.set_enabled(
             data.get('artType', SuperSourceArtType.BACKGROUND) == SuperSourceArtType.FOREGROUND
         )
 
         for idx, box in enumerate(data.get('boxes', [])):
-            self.boxes[i].set_enabled(box.get('enabled', False))
-            self.boxes[i].set_source(box.get('source'))
+            self.boxes[idx].set_enabled(box.get('enabled', False))
+            self.boxes[idx].set_source(inputs.get(box.get('source')))
 
 
 class USK(QObject):
@@ -329,7 +329,7 @@ class SwitcherState(QObject):
             self.mixTransition.set_rate(props['rate'])
 
     def updateSuperSource(self, data):
-        self.super_source.update(data)
+        self.super_source.update(data, self.inputs)
 
     def updateFullTally(self, tally):
         for ip in self.inputs.itervalues():
@@ -362,7 +362,7 @@ class SwitcherState(QObject):
             if self.me_index in data:
                 self.updateMixTransitionProps(data[self.me_index])
         elif msgType == ATEMMessageTypes.SUPER_SOURCE_CHANGED:
-            self.super_source.update(data)
+            self.super_source.update(data, self.inputs)
         elif msgType == ATEMMessageTypes.ATEM_CONNECTED:
             self._initFromAtem()
         elif msgType == ATEMMessageTypes.ATEM_DISCONNECTED:
