@@ -171,10 +171,14 @@ class VideoSwitcher(QWidget):
         checkedButton = self.inputs.checkedButton()
         if checkedButton and checkedButton.input:
             self.og.setAuxesEnabled(True)
+            self.ssg.setDestinationButtonsEnabled(
+                checkedButton.input.source != VideoSource.SUPER_SOURCE
+            )
             if self.atem:
                 self.atem.setPreview(checkedButton.input.source, me=self.me)
         else:
             self.og.setAuxesEnabled(False)
+            self.ssg.setDestinationButtonsEnabled(False)
 
     @with_atem
     def cut(self):

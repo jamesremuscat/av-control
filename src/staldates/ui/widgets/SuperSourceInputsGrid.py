@@ -23,6 +23,8 @@ class SuperSourceInputsGrid(QFrame):
 
         layout = QGridLayout()
 
+        self.destination_buttons = []
+
         lbl = QLabel('Super Source inputs')
         lbl.setAlignment(Qt.AlignHCenter)
         layout.addWidget(lbl, 0, 0, 1, 2)
@@ -32,13 +34,21 @@ class SuperSourceInputsGrid(QFrame):
             layout.addWidget(btn, 1 + (i / 2), i % 2)
             btn.clicked.connect(self.boxSignalMapper.map)
             self.boxSignalMapper.setMapping(btn, i)
+            self.destination_buttons.append(btn)
 
         btnBackground = SuperSourceButton(super_source.fill)
         btnBackground.clicked.connect(self.setBackground.emit)
         btnBackground.setProperty("class", "mainMix")
         layout.addWidget(btnBackground, 3, 0, 1, 2)
+        self.destination_buttons.append(btnBackground)
+
+        self.setDestinationButtonsEnabled(False)
 
         self.setLayout(layout)
 
     def setBoxInput(self, idx):
         self.setBox.emit(idx)
+
+    def setDestinationButtonsEnabled(self, enabled):
+        for b in self.destination_buttons:
+            b.setEnabled(enabled and b.output.enabled)
