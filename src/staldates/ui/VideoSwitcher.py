@@ -143,6 +143,12 @@ class VideoSwitcher(QWidget):
             if self.inputs.checkedButton().input:
                 self.atem.setSuperSourceFill(self.inputs.checkedButton().input.source)
 
+        def previewSSrc():
+            if self.atem:
+                self.atem.setPreview(VideoSource.SUPER_SOURCE, me=self.me)
+
+        self.ssg.sendToPreview.connect(previewSSrc)
+
         self.outputs_panel = QStackedLayout()
         self.outputs_panel.addWidget(self.og)
         self.outputs_panel.addWidget(self.ssg)
