@@ -1,6 +1,6 @@
 from PySide.QtGui import QGridLayout, QIcon, QMainWindow, QStackedWidget, QWidget,\
-    QHBoxLayout
-from PySide.QtCore import Qt
+    QHBoxLayout, QToolButton
+from PySide.QtCore import Qt, QSize
 from staldates.ui.widgets.Buttons import ExpandingButton
 from staldates.ui.widgets.Clock import Clock
 from staldates.ui.widgets.SystemPowerWidget import SystemPowerWidget
@@ -123,7 +123,16 @@ class MainWindow(QMainWindow):
 
         tray = QHBoxLayout()
         tray.addWidget(Clock())
+
+        btnToggle = QToolButton()
+        btnToggle.setIcon(QIcon(':icons/go-jump'))
+        btnToggle.clicked.connect(self.mainScreen.toggle_outputs_panel)
+        btnToggle.setIconSize(QSize(24, 24))
+        btnToggle.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        tray.addWidget(btnToggle)
+
         tray.addWidget(SystemStatus(controller))
+
         mainLayout.addLayout(tray, 1, column)
 
         mainLayout.setRowStretch(0, 8)

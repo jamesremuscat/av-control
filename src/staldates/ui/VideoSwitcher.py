@@ -143,31 +143,24 @@ class VideoSwitcher(QWidget):
             if self.inputs.checkedButton().input:
                 self.atem.setSuperSourceFill(self.inputs.checkedButton().input.source)
 
-        outputs_panel = QStackedLayout()
-        outputs_panel.addWidget(self.og)
-        outputs_panel.addWidget(self.ssg)
+        self.outputs_panel = QStackedLayout()
+        self.outputs_panel.addWidget(self.og)
+        self.outputs_panel.addWidget(self.ssg)
 
-        layout.addLayout(outputs_panel, 1, 5, 1, 2)
-
-        def toggle_outputs_panel():
-            outputs_panel.setCurrentIndex(
-                (outputs_panel.currentIndex() + 1) % 2
-            )
-        btnToggle = QToolButton()
-        btnToggle.setIcon(QIcon(':icons/go-jump'))
-        btnToggle.clicked.connect(toggle_outputs_panel)
-        btnToggle.setIconSize(QSize(24, 24))
-        btnToggle.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-        layout.addWidget(btnToggle, 2, 6)
-        layout.setAlignment(btnToggle, Qt.AlignRight)
+        layout.addLayout(self.outputs_panel, 1, 5, 1, 2)
 
         self.blankWidget = QWidget()
-        layout.addWidget(self.blankWidget, 1, 0, 2, 5)
+        layout.addWidget(self.blankWidget, 1, 0, 1, 5)
 
         layout.setRowStretch(0, 1)
         layout.setRowStretch(1, 5)
 
         self.setLayout(layout)
+
+    def toggle_outputs_panel(self):
+        self.outputs_panel.setCurrentIndex(
+            (self.outputs_panel.currentIndex() + 1) % 2
+        )
 
     def setExtraInput(self, inp):
         self.extrasBtn.setInput(inp)
@@ -236,11 +229,11 @@ class VideoSwitcher(QWidget):
             layout.removeWidget(widget)
             if panel:
                 # display panel
-                layout.addWidget(panel, 1, 0, 2, 5)
+                layout.addWidget(panel, 1, 0, 1, 5)
                 panel.show()
             else:
                 # hide panel
-                layout.addWidget(self.blankWidget, 1, 0, 2, 5)
+                layout.addWidget(self.blankWidget, 1, 0, 1, 5)
                 self.blankWidget.show()
 
     def displayAdvPanel(self):
