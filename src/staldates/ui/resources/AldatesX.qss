@@ -63,7 +63,7 @@ SuperSourceButton>#stateDisplay[highlight="true"], SuperSourceButton>#textDispla
   background-color: transparent;
 }
 
-SuperSourceButton.mainMix > #stateDisplay[highlight="true"], SuperSourceButton.mainMix > #textDisplay {
+SuperSourceButton.mainMix > #stateDisplay, SuperSourceButton.mainMix > #textDisplay {
   color: black;
 }
 
