@@ -16,7 +16,7 @@ MainMixControl {
   border-radius: 5px;
 }
 
-MainMixControl > QLabel {
+MainMixControl > QLabel, SuperSourceInputsGrid > QLabel {
   text-align: center;
   font-size: 12pt;
 }

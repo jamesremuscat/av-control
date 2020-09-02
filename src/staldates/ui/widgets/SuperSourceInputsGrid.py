@@ -1,4 +1,4 @@
-from PySide.QtGui import QFrame, QGridLayout, QLabel
+from PySide.QtGui import QFrame, QGridLayout, QLabel, QSizePolicy
 from staldates.ui.widgets.Buttons import ExpandingButton, OutputButton
 from PySide.QtCore import Signal, QSignalMapper, Qt
 from avx.devices.net.atem.constants import VideoSource
@@ -27,8 +27,10 @@ class SuperSourceInputsGrid(QFrame):
         self.destination_buttons = []
 
         lbl = QLabel('Super Source inputs')
-        lbl.setAlignment(Qt.AlignHCenter)
-        layout.addWidget(lbl, 0, 0, 1, 2)
+        lbl.setWordWrap(True)
+        lbl.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+        lbl.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        layout.addWidget(lbl, 0, 0, 1, 1)
 
         for i in range(4):
             btn = SuperSourceButton(super_source.boxes[i])
@@ -44,9 +46,10 @@ class SuperSourceInputsGrid(QFrame):
         self.destination_buttons.append(btnBackground)
 
         btnPreview = ExpandingButton()
-        btnPreview.setText('To preview')
+        btnPreview.setText('Preview SS')
         btnPreview.clicked.connect(self.sendToPreview.emit)
-        layout.addWidget(btnPreview, 4, 1)
+        btnPreview.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        layout.addWidget(btnPreview, 0, 1, alignment=Qt.AlignTop)
 
         self.setDestinationButtonsEnabled(False)
 

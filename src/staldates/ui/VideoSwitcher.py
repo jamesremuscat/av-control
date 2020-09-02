@@ -1,8 +1,9 @@
 from avx.devices.net.atem.constants import VideoSource, TransitionStyle
 from PySide.QtCore import QSize, Qt
 from PySide.QtGui import QWidget, QGridLayout, QHBoxLayout, QButtonGroup, QLabel,\
-    QMenu, QStackedLayout, QToolButton, QIcon
+    QMenu, QStackedLayout, QToolButton, QIcon, QVBoxLayout
 from staldates.ui.widgets.Buttons import InputButton, FlashingInputButton
+from staldates.ui.widgets.MainMixControl import MainMixControl
 from staldates.ui.widgets.OutputsGrid import OutputsGrid
 from staldates.ui.CameraControls import CameraControl, AdvancedCameraControl
 from staldates.ui.StringConstants import StringConstants
@@ -123,8 +124,6 @@ class VideoSwitcher(QWidget):
 
         self.og = OutputsGrid(self.switcherState, self.me)
 
-        self.og.take.connect(self.take)
-        self.og.cut.connect(self.cut)
         self.og.selected.connect(self.sendToAux)
         self.og.mainToAll.connect(self.sendMainToAllAuxes)
         self.og.all.connect(self.sendToAll)
@@ -153,7 +152,17 @@ class VideoSwitcher(QWidget):
         self.outputs_panel.addWidget(self.og)
         self.outputs_panel.addWidget(self.ssg)
 
-        layout.addLayout(self.outputs_panel, 1, 5, 1, 2)
+        mainMixFrame = MainMixControl()
+        mainMixFrame.cut.connect(self.cut)
+        mainMixFrame.take.connect(self.take)
+
+        outputs_frame = QVBoxLayout()
+        outputs_frame.addWidget(mainMixFrame)
+        outputs_frame.addLayout(self.outputs_panel)
+        outputs_frame.setStretch(0, 2)
+        outputs_frame.setStretch(1, 5)
+
+        layout.addLayout(outputs_frame, 1, 5, 1, 2)
 
         self.blankWidget = QWidget()
         layout.addWidget(self.blankWidget, 1, 0, 1, 5)
