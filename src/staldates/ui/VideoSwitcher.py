@@ -62,7 +62,7 @@ class VideoSwitcher(QWidget):
                 self.joystickAdapter.set_on_move(None)
 
         overlayControl = OverlayControl(
-            self.switcherState.usks[1][0],
+            self.switcherState.usks[self.me - 1][0],
             self.switcherState.mixTransition,
             self.atem
         )
